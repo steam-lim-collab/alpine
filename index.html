@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Efecto Rollover con Alpine.js | Botón Interactivo</title>
+    <!-- Tailwind CSS CDN para estilos modernos y responsivos (opcional pero elegante) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js CDN - Biblioteca ligera para interactividad -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        /* Estilos base adicionales para mejorar la experiencia */
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf2 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+        /* Pequeña animación suave para el botón y sombra */
+        .btn-rollover {
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-rollover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Efecto de foco para accesibilidad */
+        .btn-rollover:focus-visible {
+            outline: 3px solid #ffffff;
+            outline-offset: 2px;
+        }
+        /* Clase para el estado activo del rollover (opcional, pero Alpine maneja clases dinámicas) */
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="text-center max-w-md w-full">
+        <!-- Título explicativo sutil -->
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2 tracking-tight">
+            Efecto <span class="text-indigo-600">Rollover</span>
+        </h1>
+        <p class="text-gray-500 mb-8 text-lg">
+            Pasa el ratón sobre el botón para ver el cambio
+        </p>
+
+        <!-- 
+            BOTÓN PRINCIPAL CON EFECTO ROLLOVER USANDO ALPINE.JS
+            - x-data: declara el estado reactivo (hover = false)
+            - @mouseenter: evento al entrar el mouse → hover = true
+            - @mouseleave: evento al salir → hover = false
+            - :class: enlaza clases dinámicas según hover (verdadero o falso)
+            - También usamos estilos base con Tailwind para facilitar el diseño
+            - El botón no tiene href ni acción de navegación (solo es un div/button)
+        -->
+        <div 
+            x-data="{ hover: false }"
+            @mouseenter="hover = true"
+            @mouseleave="hover = false"
+            class="inline-block"
+        >
+            <button
+                type="button"
+                class="btn-rollover px-8 py-4 rounded-2xl font-bold text-xl md:text-2xl tracking-wide cursor-pointer transition-all duration-200 focus:outline-none"
+                :class="{
+                    'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-xl': hover,
+                    'bg-white text-gray-700 border border-gray-300 shadow-md': !hover
+                }"
+                :style="hover ? 'transform: scale(1.02);' : 'transform: scale(1);'"
+                aria-label="Botón con efecto rollover"
+            >
+                <!-- Icono y texto dinámico con Alpine (opcional, para más diversión) -->
+                <span class="flex items-center justify-center gap-2">
+                    <!-- icono cambia según estado hover usando x-show o template, pero mejor usar x-text o clases condicionales -->
+                    <svg x-show="!hover" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <svg x-show="hover" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    <span x-text="hover ? '¡Estás encima!' : 'Pasa por aquí'"></span>
+                </span>
+            </button>
+        </div>
+
+        <!-- Información adicional: Efecto Rollover puro con Alpine -->
+        <div class="mt-10 bg-white/60 backdrop-blur-sm rounded-2xl p-5 shadow-sm border border-gray-200/80 text-left">
+            <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                ¿Cómo funciona?
+            </h2>
+            <p class="text-gray-600 mt-2 text-sm leading-relaxed">
+                Este botón usa <strong class="font-mono text-indigo-600">Alpine.js</strong> para detectar eventos <code class="bg-gray-100 px-1 rounded">@mouseenter</code> y <code class="bg-gray-100 px-1 rounded">@mouseleave</code>. 
+                La propiedad <code class="bg-gray-100 px-1 rounded">hover</code> cambia dinámicamente, modificando clases CSS, texto, color de fondo, sombras e incluso un pequeño icono. 
+                <span class="block mt-2 text-xs text-gray-500">✔ Sin redirecciones, solo efecto visual "rollover".</span>
+            </p>
+        </div>
+        
+        <!-- Pequeña nota: no hay navegación, solo el efecto rollover -->
+        <p class="text-xs text-gray-400 mt-6">
+            🖱️ Efecto Rollover puro | Sin enlaces | Tecnología: Alpine.js + Tailwind CSS
+        </p>
+    </div>
+
+    <!-- Script adicional de respaldo (Alpine ya está cargado, pero aseguramos la reactividad) -->
+    <!-- No es necesario nada más, Alpine gestiona el estado -->
+</body>
+</html>
